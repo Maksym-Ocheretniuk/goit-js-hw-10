@@ -70,10 +70,44 @@ function clearInterface() {
 function renderCountries(result) {
   if (result.length === 1) {
     countriesList.innerHTML = '';
-    // countryInfo.innerHTML = countryCardMarkup(result);
+    refs.countryInfoListEl.innerHTML = onCreateCountryInfoList(result);
   }
   if (result.length > 1 && result.length < 11) {
     countryInfo.innerHTML = '';
-    // countriesList.innerHTML = countriesListMarkup(result);
+    refs.countryListEl.innerHTML = onCreateCountryList(result);
   }
+}
+
+function onCreateCountryList(result) {
+  return result
+    .map(({ name, flags }) => {
+      return `<li class="country-item">
+                    <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
+                    <span>${name.official}</span>
+                </li>`;
+    })
+    .join('');
+}
+
+function onCreateCountryInfoList(result) {
+  return result
+    .map(({ flags, name, capital, population, languages }) => {
+      languages = Object.values(languages).join(', ');
+      return `<ul class="weather-info list">
+                    <li class="weather-info-item-map">
+                        <img src="${flags.svg}" alt="${name}" width="90" height="auto">
+                        <p class="temp">${name.official}</p>
+                    </li>
+                    <li class="weather-info-item">
+                        <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
+                    </li>
+                    <li class="weather-info-item">
+                        <p class="sunset-time"><span class="bold">Population:</span> ${population}</p>
+                    </li>
+                    <li class="weather-info-item">
+                        <p class="clouds"><span class="bold">Languages:</span> ${languages}</p>
+                    </li>
+                </ul>`;
+    })
+    .join('');
 }
