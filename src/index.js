@@ -9,22 +9,19 @@ import { fetchSearchCountries } from './js/fetchSearchCountries';
 const DEBOUNCE_DELAY = 300;
 
 const refs = {
-  inputSearchBoxEl: document.getElementById('search-box'),
+  inputEl: document.getElementById('search-box'),
   countryListEl: document.getElementsByClassName('country-list'),
-  countryInfoListEl: document.getElementsByClassName('country-info'),
+  countryInfoEl: document.getElementsByClassName('country-info'),
 };
 
-// const searchValue = refs.inputSearchBoxEl.value;
+// const searchValue = refs.inputEl.value;
 // console.dir(searchValue);
 // console.dir(refs.countryListEl);
-// console.log(refs.countryInfoListEl);
+// console.log(refs.countryInfoEl);
 
-refs.inputSearchBoxEl.addEventListener(
-  'input',
-  debounce(onInputValue, DEBOUNCE_DELAY)
-);
+refs.inputEl.addEventListener('input', debounce(onInputSearch, DEBOUNCE_DELAY));
 
-function onInputValue(e) {
+function onInputSearch(e) {
   e.preventDefault();
 
   const value = e.target.value.trim();
@@ -37,6 +34,7 @@ function onInputValue(e) {
 
   fetchSearchCountries(value)
     .then(data => {
+      console.log(data);
       if (data.length > 10) {
         Notify.info(
           'Too many matches found. Please enter a more specific name.'
@@ -52,50 +50,59 @@ function onInputValue(e) {
 
 function clearInterface() {
   refs.countryListEl.innerHTML = '';
-  refs.countryInfoListEl.innerHTML = '';
+  refs.countryInfoEl.innerHTML = '';
 }
 
 function renderCountries(result) {
   if (result.length === 1) {
-    countriesList.innerHTML = '';
-    refs.countryInfoListEl.innerHTML = onCreateCountryInfoList(result);
+    refs.countryListEl.innerHTML = '';
+    refs.countryInfoEl.innerHTML = onCreateCountryInfo(result);
   }
-  if (result.length > 1 && result.length < 11) {
-    countryInfo.innerHTML = '';
+  if (result.length > 1 && result.length <= 10) {
+    refs.countryInfoEl.innerHTML = '';
     refs.countryListEl.innerHTML = onCreateCountryList(result);
   }
 }
 
-function onCreateCountryInfoList(result) {
+function onCreateCountryInfo(result) {
   return result
-    .map(({ flags, name, capital, population, languages }) => {
-      languages = Object.values(languages).join(', ');
-      return `<ul class="country-info__list list">
-                    <li class="country-info__item-title">
-                        <img src="${flags.svg}" alt="${name}" width="90" height="auto">
-                        <p class="country-name">${name.official}</p>
-                    </li>
-                    <li class="country-info__item">
-                        <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
-                    </li>
-                    <li class="wcountry-info__item">
-                        <p class="sunset-time"><span class="bold">Population:</span> ${population}</p>
-                    </li>
-                    <li class="country-info__item">
-                        <p class="clouds"><span class="bold">Languages:</span> ${languages}</p>
-                    </li>
-                </ul>`;
-    })
+    .map(
+      ({ flags, name, capital, population, languages }) => `
+      <ul class="country-info__list list">
+        <li class="country-info__item-title">
+          <img src="${flags.svg}" alt="${
+        name.official
+      }" width="20" height="auto">
+          <p class="country-name">${name.official}</p>
+        </li>
+        <li class="country-info__item">
+          <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
+        </li>
+        <li class="wcountry-info__item">
+          <p class="sunset-time"><span class="bold">Population:</span> ${population}
+          </p >
+        </li>
+        <li class="country-info__item">
+          <p class="clouds"><span class="bold">Languages:</span> ${Object.values(
+            languages
+          )}</p>
+        </li>
+      </ul>
+      `
+    )
     .join('');
 }
 
 function onCreateCountryList(result) {
   return result
     .map(({ name, flags }) => {
-      return `<li class="country-item">
-                    <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
-                    <span>${name.official}</span>
-                </li>`;
+      return;
+      `
+        <li class="country-item">
+          <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
+          <span>${name.official}</span>
+        </li>
+        `;
     })
     .join('');
 }
