@@ -2,8 +2,8 @@ import './css/styles.css';
 
 // Import as a Module
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import debounce from 'lodash.debounce';
 
+import debounce from 'lodash.debounce';
 import { fetchSearchCountries } from './js/fetchSearchCountries';
 
 const DEBOUNCE_DELAY = 300;
@@ -15,7 +15,6 @@ const refs = {
 };
 
 // const searchValue = refs.inputSearchBoxEl.value;
-
 // console.dir(searchValue);
 // console.dir(refs.countryListEl);
 // console.log(refs.countryInfoListEl);
@@ -29,6 +28,7 @@ function onInputValue(e) {
   e.preventDefault();
 
   const value = e.target.value.trim();
+  console.log(value);
 
   if (!value) {
     clearInterface();
@@ -51,8 +51,8 @@ function onInputValue(e) {
 }
 
 function clearInterface() {
-  countriesList.innerHTML = '';
-  countryInfo.innerHTML = '';
+  refs.countryListEl.innerHTML = '';
+  refs.countryInfoListEl.innerHTML = '';
 }
 
 function renderCountries(result) {
@@ -66,6 +66,29 @@ function renderCountries(result) {
   }
 }
 
+function onCreateCountryInfoList(result) {
+  return result
+    .map(({ flags, name, capital, population, languages }) => {
+      languages = Object.values(languages).join(', ');
+      return `<ul class="country-info__list list">
+                    <li class="country-info__item-title">
+                        <img src="${flags.svg}" alt="${name}" width="90" height="auto">
+                        <p class="country-name">${name.official}</p>
+                    </li>
+                    <li class="country-info__item">
+                        <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
+                    </li>
+                    <li class="wcountry-info__item">
+                        <p class="sunset-time"><span class="bold">Population:</span> ${population}</p>
+                    </li>
+                    <li class="country-info__item">
+                        <p class="clouds"><span class="bold">Languages:</span> ${languages}</p>
+                    </li>
+                </ul>`;
+    })
+    .join('');
+}
+
 function onCreateCountryList(result) {
   return result
     .map(({ name, flags }) => {
@@ -73,29 +96,6 @@ function onCreateCountryList(result) {
                     <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
                     <span>${name.official}</span>
                 </li>`;
-    })
-    .join('');
-}
-
-function onCreateCountryInfoList(result) {
-  return result
-    .map(({ flags, name, capital, population, languages }) => {
-      languages = Object.values(languages).join(', ');
-      return `<ul class="weather-info list">
-                    <li class="weather-info-item-map">
-                        <img src="${flags.svg}" alt="${name}" width="90" height="auto">
-                        <p class="temp">${name.official}</p>
-                    </li>
-                    <li class="weather-info-item">
-                        <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
-                    </li>
-                    <li class="weather-info-item">
-                        <p class="sunset-time"><span class="bold">Population:</span> ${population}</p>
-                    </li>
-                    <li class="weather-info-item">
-                        <p class="clouds"><span class="bold">Languages:</span> ${languages}</p>
-                    </li>
-                </ul>`;
     })
     .join('');
 }
