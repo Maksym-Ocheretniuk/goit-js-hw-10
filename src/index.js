@@ -4,6 +4,8 @@ import './css/styles.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import debounce from 'lodash.debounce';
 
+import { fetchSearchCountries } from './js/fetchSearchCountries';
+
 const DEBOUNCE_DELAY = 300;
 
 const refs = {
@@ -18,12 +20,10 @@ const refs = {
 // console.dir(refs.countryListEl);
 // console.log(refs.countryInfoListEl);
 
-const BASE_URL = 'https://restcountries.com/v3.1/name/';
-const searchParams = new URLSearchParams({
-  fields: 'name,capital,population,flags,languages,',
-});
-
-refs.inputSearchBoxEl.addEventListener('input', onInputValue);
+refs.inputSearchBoxEl.addEventListener(
+  'input',
+  debounce(onInputValue, DEBOUNCE_DELAY)
+);
 
 function onInputValue(e) {
   e.preventDefault();
@@ -35,32 +35,20 @@ function onInputValue(e) {
     return;
   }
 
-  const fetchCountries = countryName =>
-    fetch(`${BASE_URL}${countryName}?${searchParams}`)
-      .then(response => {
-        if (response.status === 404) {
-          throw new Error(response.status);
-        }
-
-        return response.json();
-      })
-      .then(data => {
-        if (data.length > 10) {
-          Notify.info(
-            'Too many matches found. Please enter a more specific name.'
-          );
-        }
-        renderCountries(data);
-      })
-      .catch(err => {
-        clearInterface();
-        Notify.failure('Oops, there is no country with that name');
-      });
+  fetchSearchCountries(value)
+    .then(data => {
+      if (data.length > 10) {
+        Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      }
+      renderCountries(data);
+    })
+    .catch(err => {
+      clearInterface();
+      Notify.failure('Oops, there is no country with that name');
+    });
 }
-
-// function onCreateCountryList(params) {}
-
-// function onCreateCountryInfoList(params) {}
 
 function clearInterface() {
   countriesList.innerHTML = '';
