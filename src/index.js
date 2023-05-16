@@ -36,6 +36,7 @@ function onInputSearch(e) {
     .then(data => {
       console.log(data);
       if (data.length > 10) {
+        clearInterface();
         Notify.info(
           'Too many matches found. Please enter a more specific name.'
         );
@@ -44,7 +45,7 @@ function onInputSearch(e) {
     })
     .catch(err => {
       clearInterface();
-      if (err.status === '404') {
+      if (err.message === '404') {
         Notify.failure('Oops, there is no country with that name');
       } else {
         Notify.failure(err.message);
