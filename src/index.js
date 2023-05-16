@@ -10,8 +10,8 @@ const DEBOUNCE_DELAY = 300;
 
 const refs = {
   inputEl: document.getElementById('search-box'),
-  countryListEl: document.getElementsByClassName('country-list'),
-  countryInfoEl: document.getElementsByClassName('country-info'),
+  countryListEl: document.querySelector('.country-list'),
+  countryInfoEl: document.querySelector('.country-info'),
 };
 
 // const searchValue = refs.inputEl.value;
@@ -44,7 +44,11 @@ function onInputSearch(e) {
     })
     .catch(err => {
       clearInterface();
-      Notify.failure('Oops, there is no country with that name');
+      if (err.status === '404') {
+        Notify.failure('Oops, there is no country with that name');
+      } else {
+        Notify.failure(err.message);
+      }
     });
 }
 
@@ -56,19 +60,30 @@ function clearInterface() {
 function renderCountries(result) {
   if (result.length === 1) {
     refs.countryListEl.innerHTML = '';
-    refs.countryInfoEl.innerHTML = onCreateCountryInfo(result);
+    refs.countryInfoEl.insertAdjacentHTML(
+      'afterbegin',
+      onCreateCountryInfo(result)
+    );
   }
   if (result.length > 1 && result.length <= 10) {
     refs.countryInfoEl.innerHTML = '';
-    refs.countryListEl.innerHTML = onCreateCountryList(result);
+    refs.countryListEl.insertAdjacentHTML(
+      'afterbegin',
+      onCreateCountryList(result)
+    );
   }
 }
 
 function onCreateCountryInfo(result) {
   return result
     .map(
-      ({ flags, name, capital, population, languages }) => `
-      <ul class="country-info__list list">
+      ({
+        flags,
+        name,
+        capital,
+        population,
+        languages,
+      }) => `<ul class="country-info__list list">
         <li class="country-info__item-title">
           <img src="${flags.svg}" alt="${
         name.official
@@ -78,7 +93,7 @@ function onCreateCountryInfo(result) {
         <li class="country-info__item">
           <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
         </li>
-        <li class="wcountry-info__item">
+        <li class="country-info__item">
           <p class="sunset-time"><span class="bold">Population:</span> ${population}
           </p >
         </li>
@@ -96,8 +111,7 @@ function onCreateCountryInfo(result) {
 function onCreateCountryList(result) {
   return result
     .map(({ name, flags }) => {
-      return;
-      `
+      return `
         <li class="country-item">
           <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
           <span>${name.official}</span>

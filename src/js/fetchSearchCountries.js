@@ -5,7 +5,7 @@ const searchParams = new URLSearchParams({
 
 export const fetchSearchCountries = countryName =>
   fetch(`${BASE_URL}/${countryName}?${searchParams}`).then(response => {
-    if (response.status === 404) {
+    if (!response.ok) {
       throw new Error(response.status);
     }
 
