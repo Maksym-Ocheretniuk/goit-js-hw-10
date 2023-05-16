@@ -101,7 +101,7 @@ function onCreateCountryInfo(result) {
         <li class="country-info__item">
           <p><span class="bold">Languages: </span>${Object.values(
             languages
-          )}</p>
+          ).join(', ')}</p>
         </li>
       </ul>
       `
