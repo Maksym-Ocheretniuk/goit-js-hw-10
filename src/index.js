@@ -59,14 +59,14 @@ function clearInterface() {
 
 function renderCountries(result) {
   if (result.length === 1) {
-    refs.countryListEl.innerHTML = '';
+    clearInterface();
     refs.countryInfoEl.insertAdjacentHTML(
       'afterbegin',
       onCreateCountryInfo(result)
     );
   }
   if (result.length > 1 && result.length <= 10) {
-    refs.countryInfoEl.innerHTML = '';
+    clearInterface();
     refs.countryListEl.insertAdjacentHTML(
       'afterbegin',
       onCreateCountryList(result)
@@ -87,7 +87,7 @@ function onCreateCountryInfo(result) {
         <li class="country-info__item-title">
           <img src="${flags.svg}" alt="${
         name.official
-      }" width="70" height="auto">
+      }" width="80" height="auto">
           <p class="country-name">${name.official}</p>
         </li>
         <li class="country-info__item">
@@ -113,7 +113,7 @@ function onCreateCountryList(result) {
     .map(({ name, flags }) => {
       return `
         <li class="country-item">
-          <img src="${flags.svg}" alt="${name.official}" width="70" height="auto">
+          <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
           <span class="country-name">${name.official}</span>
         </li>
         `;
