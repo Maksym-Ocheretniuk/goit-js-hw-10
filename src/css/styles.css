@@ -40,8 +40,9 @@ body {
 
 .country-info__list {
   list-style: none;
-  text-align: left;
   padding: 0;
+
+  text-align: left;
 }
 
 .country-info__item-title {

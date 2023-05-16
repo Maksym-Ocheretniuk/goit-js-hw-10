@@ -83,22 +83,22 @@ function onCreateCountryInfo(result) {
         capital,
         population,
         languages,
-      }) => `<ul class="country-info__list list">
+      }) => `<ul class="country-info__list">
         <li class="country-info__item-title">
           <img src="${flags.svg}" alt="${
         name.official
-      }" width="20" height="auto">
+      }" width="70" height="auto">
           <p class="country-name">${name.official}</p>
         </li>
         <li class="country-info__item">
-          <p class="sunrise-time"><span class="bold">Capital:</span> ${capital}</p>
+          <p><span class="bold">Capital: </span>${capital}</p>
         </li>
         <li class="country-info__item">
-          <p class="sunset-time"><span class="bold">Population:</span> ${population}
+          <p><span class="bold">Population: </span>${population}
           </p >
         </li>
         <li class="country-info__item">
-          <p class="clouds"><span class="bold">Languages:</span> ${Object.values(
+          <p><span class="bold">Languages: </span>${Object.values(
             languages
           )}</p>
         </li>
@@ -113,8 +113,8 @@ function onCreateCountryList(result) {
     .map(({ name, flags }) => {
       return `
         <li class="country-item">
-          <img src="${flags.svg}" alt="${name.official}" width="60" height="auto">
-          <span>${name.official}</span>
+          <img src="${flags.svg}" alt="${name.official}" width="70" height="auto">
+          <span class="country-name">${name.official}</span>
         </li>
         `;
     })
